@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-
+import { MoviesService } from '../core/services/movies.service';
 @Component({
   selector: 'app-movie',
   standalone: true,
@@ -10,7 +10,19 @@ import { Component, Input } from '@angular/core';
 export class MovieComponent {
   @Input() public movieId!: string;
 
+  constructor(
+    // private readonly route: ActivatedRoute,
+    private readonly moviesService: MoviesService
+  ) {}
+
   ngOnInit() {
-    console.log('MovieComponent initialized with movieId:', this.movieId);
+    this.moviesService
+      .getMovies({
+        title: this.movieId,
+        page: 1,
+      })
+      .subscribe((results) => {
+        console.log(results);
+      });
   }
 }

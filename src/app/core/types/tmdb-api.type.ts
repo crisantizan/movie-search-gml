@@ -21,3 +21,8 @@ export type TMDBApiResponse = {
   total_pages: number;
   total_results: number;
 };
+
+export type SearchArgs = {
+  title: string;
+  page: number;
+};

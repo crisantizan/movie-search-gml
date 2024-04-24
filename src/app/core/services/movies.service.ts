@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { TMDBApiResponse } from '../types/tmdb-api.type';
+import { SearchArgs, TMDBApiResponse } from '../types/tmdb-api.type';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MoviesService {
-  private readonly API_KEY = environment.tmdbApiKey;
+  private readonly API_ACCESS_TOKEN = environment.tmdbAccessToken;
   private readonly API_URL = environment.tmdbApiUrl;
 
   constructor(private readonly httpClient: HttpClient) {}
@@ -15,16 +15,16 @@ export class MoviesService {
   private getHeaders() {
     return {
       accept: 'application/json',
-      Authorization: `Bearer ${this.API_KEY}`,
+      Authorization: `Bearer ${this.API_ACCESS_TOKEN}`,
     };
   }
 
-  public getMoviesByTitle(title: string, page: number) {
+  public getMovies(args: SearchArgs) {
     const params = {
-      query: title,
+      query: args.title,
       include_adult: 'false',
       language: 'es-CO',
-      page: page.toString(),
+      page: args.page.toString(),
     };
 
     const queryParams = new URLSearchParams(params).toString();
