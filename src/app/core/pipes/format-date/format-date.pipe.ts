@@ -18,6 +18,6 @@ export class FormatDatePipe implements PipeTransform {
       year: 'numeric',
     };
 
-    return date.toLocaleDateString(locale || 'es-MX', options);
+    return date.toLocaleDateString(locale || 'es-CO', options);
   }
 }
