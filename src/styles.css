@@ -47,10 +47,82 @@ h1 {
 
   padding: 1.5rem 1.75rem;
   border-radius: 3rem;
-  /* background: #1f2123; */
   background-color: var(--bg-color-search);
   -webkit-box-shadow: 5px 5px 7px #1c1d1f, -5px -5px 7px #222527;
   box-shadow: 5px 5px 7px #1c1d1f, -5px -5px 7px #222527;
+}
+
+.overview {
+  text-align: justify;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: white;
+  margin-top: 2rem;
+  line-height: 1.5;
+  letter-spacing: 0.9px;
+  padding-bottom: 2rem;
+}
+
+.w-80 {
+  width: 80% !important;
+}
+
+.content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rating,
+.duration,
+.date {
+  text-align: center;
+}
+
+.rating-info {
+  display: flex;
+  align-items: center;
+}
+
+.total-score {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.votes {
+  color: white;
+  margin-left: 5px;
+}
+
+.star {
+  font-size: 24px;
+  color: gold;
+  margin-left: 5px;
+}
+
+.duration-info,
+.date-info {
+  color: white;
+}
+
+.image-container {
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+  justify-content: center; /* Centrar las imágenes horizontalmente */
+}
+
+.image-wrapper {
+  position: relative;
+  margin: 10px;
+}
+
+.small-image {
+  width: auto;
+  height: 2rem;
+  cursor: pointer;
 }
 
 .search input {

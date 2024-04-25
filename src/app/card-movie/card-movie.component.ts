@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Movie } from '../core/types/tmdb-api.type';
 import { MoviesService } from '../core/services/movies.service';
+import { Router } from '@angular/router';
 
 const MAX_LENGTH = 40;
 
@@ -11,16 +12,17 @@ const MAX_LENGTH = 40;
   styleUrls: ['./card-movie.component.css']
 })
 
-export class CardMovieComponent implements OnInit {
+export class CardMovieComponent {
   @Input('movie') movie!: Movie;
 
-  constructor(private movieService: MoviesService) { }
-
-  ngOnInit(): void {
-  }
+  constructor(private movieService: MoviesService, private router: Router) {}
 
   getImage() {
     return this.movieService.getImageUrl(this.movie.poster_path);
+  }
+
+  goToMovie() {
+    this.router.navigate(['/movie', this.movie.id]);
   }
 
   get truncateOverview(): string {

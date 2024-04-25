@@ -1,1 +1,70 @@
-<p>movie works with the ID!{{ movieId }}</p>
+<div class="movie-card-details">
+  <div class="row">
+    <div class="col-12">
+      <div
+        class="full-width-image d-flex align-items-end"
+        [style.backgroundImage]="'url(' + backdropUrl + ')'"
+        style="height: 20rem"
+      >
+        <div class="gradient-overlay"></div>
+        <div class="text-container pl-3 pb-3">
+          <h1 class="mb-0">{{ movie.original_title }}</h1>
+          <p class="mb-0">{{ movie.tagline }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="app">
+    <div class="content">
+      <div class="rating">
+        <h3>Rating</h3>
+        <div class="rating-info">
+          <span class="star">&#9733;</span>
+          <span class="total-score">{{ movie.vote_average }}</span>
+          <span class="votes">/ {{ movie.vote_count }}</span>
+        </div>
+      </div>
+
+      <div class="duration">
+        <h3>Duración</h3>
+        <span class="duration-info">{{ getDuration }}</span>
+      </div>
+
+      <div class="date">
+        <h3>Fecha</h3>
+        <span class="date-info">{{ movie.release_date }}</span>
+      </div>
+    </div>
+    <p class="overview">{{ movie.overview }}</p>
+    <div class="mb-2">
+      <div class="image-container">
+        @for (production_company of movie.production_companies; track production_company.id) {
+          @if (!!production_company.logo_path) {
+            <div class="col">
+              <img
+                [src]="
+                  'https://image.tmdb.org/t/p/original' + production_company.logo_path
+                "
+                [alt]="'logo ' + production_company.name"
+                class="small-image"
+                [attr.data-toggle]="'tooltip'"
+                [attr.title]="production_company.name"
+              />
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </section>
+
+  <div class="back-button">
+    <button
+      class="dark-button"
+      (click)="goBack()"
+    >
+      Volver al listado
+    </button>
+</div>
+
+

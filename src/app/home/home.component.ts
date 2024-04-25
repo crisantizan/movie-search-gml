@@ -92,12 +92,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   private updatePageQueryParams(params: Partial<RouteQueryParams>) {
     const queryParams: GenericObject = {};
 
-    if (typeof params.page !== 'undefined') {
-      queryParams['page'] = params.page || null;
-    }
-
     if (typeof params.title !== 'undefined') {
       queryParams['title'] = params.title || null;
+    }
+
+    if (typeof params.page !== 'undefined') {
+      queryParams['page'] = params.page || null;
     }
 
     this.router.navigate([], {
@@ -131,6 +131,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         switchMap((searchTitle) => {
           this.updatePageQueryParams({
             title: searchTitle,
+            page: 1,
           });
 
           if (!searchTitle) {
