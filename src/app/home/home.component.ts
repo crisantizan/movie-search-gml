@@ -8,22 +8,22 @@ import {
 import { Movie, TMDBApiResponse } from '../core/types/tmdb-api.type';
 import {
   debounceTime,
-  distinct,
-  filter,
   fromEvent,
   map,
+  of,
   Subject,
-  Subscription,
   switchMap,
   takeUntil,
 } from 'rxjs';
 import { MoviesService } from '../core/services/movies.service';
 import { CardMovieComponent } from '../card-movie/card-movie.component';
+import { Pagination } from '../core/types/home-component.type';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CardMovieComponent],
+  imports: [CardMovieComponent, JsonPipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
@@ -32,11 +32,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   private movieSearchInput!: ElementRef;
 
   public movies: Movie[] = [];
+  public pagination: Pagination = {
+    currentPage: 1,
+    totalPages: 0,
+    totalResults: 0,
+  };
+
+  private defaultMovies: Movie[] = [];
+  private defaultPagination: Pagination = {
+    currentPage: 1,
+    totalPages: 0,
+    totalResults: 0,
+  };
+
   private destroy$ = new Subject<void>();
 
   constructor(private movieService: MoviesService) {}
 
   ngOnInit(): void {
+    this.getDefaultMovies();
+
     this.onSearchMovie();
   }
 
@@ -45,23 +60,55 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  private getDefaultMovies() {
+    if (!!this.defaultMovies.length) {
+      this.movies = [...this.defaultMovies];
+      this.pagination = { ...this.defaultPagination };
+
+      return;
+    }
+
+    this.movieService.getMovies({ trending: true }).subscribe((res) => {
+      this.defaultMovies = res.results || [];
+      this.movies = [...this.defaultMovies];
+
+      this.defaultPagination = {
+        currentPage: res.page,
+        totalPages: res.total_pages,
+        totalResults: res.total_results,
+      };
+
+      this.pagination = { ...this.defaultPagination };
+    });
+  }
+
   private onSearchMovie() {
     fromEvent<Event>(this.movieSearchInput.nativeElement, 'keyup')
       .pipe(
         takeUntil(this.destroy$),
-        map((event: Event) => {
-          const searchTerm = (event.target as HTMLInputElement).value;
-          return searchTerm;
-        }),
-        filter((searchTerm: string) => searchTerm.length > 3),
+        map((event: Event) => (event.target as HTMLInputElement).value),
         debounceTime(500),
-        distinct(),
-        switchMap((searchTerm: string) =>
-          this.movieService.getMovies({ title: searchTerm, page: 1 })
-        )
+        switchMap((searchTerm: string) => {
+          // Return default movies if search term is empty
+          if (searchTerm.length === 0) {
+            return of({
+              results: this.defaultMovies,
+              page: this.defaultPagination.currentPage,
+              total_pages: this.defaultPagination.totalPages,
+              total_results: this.defaultPagination.totalResults,
+            });
+          }
+
+          return this.movieService.getMovies({ title: searchTerm });
+        })
       )
       .subscribe((response) => {
-        this.movies = response?.results !== undefined ? response.results : [];
+        this.movies = response?.results || [];
+        this.pagination = {
+          currentPage: response.page,
+          totalPages: response.total_pages,
+          totalResults: response.total_results,
+        };
       });
   }
 }

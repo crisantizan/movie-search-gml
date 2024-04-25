@@ -23,6 +23,7 @@ export type TMDBApiResponse = {
 };
 
 export type SearchArgs = {
-  title: string;
-  page: number;
+  title?: string;
+  page?: number;
+  trending?: boolean;
 };

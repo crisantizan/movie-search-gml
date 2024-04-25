@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { SearchArgs, TMDBApiResponse } from '../types/tmdb-api.type';
+import { SearchMovieParams } from '../types/movies-service.type';
 
 @Injectable({
   providedIn: 'root',
@@ -20,15 +21,24 @@ export class MoviesService {
   }
 
   public getMovies(args: SearchArgs) {
-    const params = {
-      query: args.title,
+    const params: SearchMovieParams = {
       include_adult: 'false',
       language: 'es-CO',
-      page: args.page.toString(),
+      page: args.page?.toString() || '1',
     };
 
+    if (args.title) {
+      params.query = args.title;
+    }
+
+    let url = `${this.API_URL}/search/movie`;
+
+    if (args.trending) {
+      url = `${this.API_URL}/trending/movie/day`;
+    }
+
     const queryParams = new URLSearchParams(params).toString();
-    const url = `${this.API_URL}/search/movie?${queryParams}`;
+    url += `?${queryParams}`;
 
     return this.httpClient.get<TMDBApiResponse>(url, {
       headers: this.getHeaders(),
