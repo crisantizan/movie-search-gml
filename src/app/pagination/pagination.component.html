@@ -1,11 +1,9 @@
-@if (showPagination()) {
-  <div class="pagination-container">
-    <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
-    @for (page of getDisplayedPages(); track page) {
-      @if (page === 1 || page === totalPages || this.abs(page - currentPage) <= pageRange) {
-        <button (click)="goToPage(page)" [disabled]="currentPage === page">{{ page }}</button>
-      }
+<div class="pagination-container">
+  <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
+  @for (page of getDisplayedPages(); track page) {
+    @if (page === 1 || page === totalPages || this.abs(page - currentPage) <= pageRange) {
+      <button (click)="goToPage(page)" [disabled]="currentPage === page">{{ page }}</button>
     }
-    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
-  </div>
-}
+  }
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+</div>

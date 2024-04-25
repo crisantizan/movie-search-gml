@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
       this.defaultPagination = {
         currentPage: res.page,
-        totalPages: res.total_pages,
+        totalPages: this.getTotalPages(res.total_pages),
         totalResults: res.total_results,
       };
 
@@ -106,13 +106,37 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.movies = response?.results || [];
         this.pagination = {
           currentPage: response.page,
-          totalPages: response.total_pages,
+          totalPages: this.getTotalPages(response.total_pages),
           totalResults: response.total_results,
         };
       });
   }
 
-  public formatQuantityResults(): string {
-    return new Intl.NumberFormat().format(this.pagination.totalResults);
+  private getTotalPages(apiTotalPages: number): number {
+    // La API dice que tiene más de 1000 páginas, pero no es cierto, máximo 500
+    // Esto bota: Invalid page: Pages start at 1 and max at 500
+
+    return Math.min(apiTotalPages, 500);
+  }
+
+  public onPageChange(page: number) {
+    const title = (this.movieSearchInput.nativeElement as HTMLInputElement)
+      .value;
+
+    const filter = {
+      page,
+      title,
+      trending: title.length === 0,
+    };
+
+    this.movieService.getMovies(filter).subscribe((response) => {
+      this.movies = response.results || [];
+
+      this.pagination = {
+        currentPage: response.page,
+        totalPages: this.getTotalPages(response.total_pages),
+        totalResults: response.total_results,
+      };
+    });
   }
 }

@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-pagination',
+  selector: 'pagination',
   standalone: true,
   imports: [],
   templateUrl: './pagination.component.html',
@@ -12,21 +12,34 @@ export class PaginationComponent {
   @Input() totalPages: number = 1;
   @Input() pageRange: number = 5;
 
+  @Output()
+  public pageChange = new EventEmitter<number>();
+
   public previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
+
+      this.emitPage();
     }
+  }
+
+  private emitPage() {
+    this.pageChange.emit(this.currentPage);
   }
 
   public nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+
+      this.emitPage();
     }
   }
 
   public goToPage(pageNumber: number) {
     if (pageNumber >= 1 && pageNumber <= this.totalPages) {
       this.currentPage = pageNumber;
+
+      this.emitPage();
     }
   }
 

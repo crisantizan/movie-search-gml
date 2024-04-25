@@ -14,9 +14,10 @@
     }
   </section>
 
-  <app-pagination
+  <pagination
     [currentPage]="pagination.currentPage"
     [totalPages]="pagination.totalPages"
     [pageRange]="1"
-  ></app-pagination>
+    (pageChange)="onPageChange($event)"
+  ></pagination>
 </main>
