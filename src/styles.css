@@ -114,11 +114,7 @@ h1 {
 
   .search input {
     font-size: 1rem;
-  }
-
-  .search img {
-    width: 20px;
-    height: 20px;
+    width: 100%;
   }
 }
 
@@ -136,7 +132,7 @@ h1 {
   }
 
   .movie {
-    width: "100%";
+    width: 100%;
     margin: 1rem;
   }
 }
