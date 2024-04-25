@@ -1,7 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { SearchArgs, TMDBApiResponse } from '../types/tmdb-api.type';
+import {
+  MovieDetails,
+  SearchArgs,
+  TMDBApiResponse,
+} from '../types/tmdb-api.type';
 import { SearchMovieParams } from '../types/movies-service.type';
 
 @Injectable({
@@ -41,6 +45,14 @@ export class MoviesService {
     url += `?${queryParams}`;
 
     return this.httpClient.get<TMDBApiResponse>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  public getMovieById(id: number) {
+    const url = `${this.API_URL}/movie/${id}`;
+
+    return this.httpClient.get<MovieDetails>(url, {
       headers: this.getHeaders(),
     });
   }
