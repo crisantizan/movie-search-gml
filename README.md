@@ -1,27 +1,25 @@
-# MovieSearchGml
+# Movie Search Gml
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.5.
+Link del proyecto deployado: https://crisantizan.github.io/movie-search-gml 🚀
 
-## Development server
+## Sobre este proyecto
+Esta aplicación se crea como requerimiento de una prueba técnica de GML a la vacante de Desarrollador Frontend.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Comentarios
+Lo primera duda, en cuál versión de Angular realizarlo. Se me pasó por la cabeza usar una versión anterior como la 16 o 15, ya que la mayoría de proyectos actuales están sobre esas, pero sinceramente hace rato llevo esperando la oportunidad de implementar la v17 por todas las mejoras que trae, no solo a nivel de implementaciones técnicas del framework, sino la experiencia de desarrollo, mejora mucho; por lo que sí, me decidí por la v17, pero dejando ciertos features por fuera como las señales, intenté utilizar un poco más la manera tradicional rxjs.
 
-## Code scaffolding
+Decidí no implementar librerías externas de componentes o de estilos, todo está hecho por mí mismo. Esto mismo me impidió implementar ciertas mejoras gráficas al componente de movies (falta de tiempo).
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+El sincronizar el estado de app con la ruta de manera bidireccional fue el reto más exigente que me encontré, más que todo porque me tocó refactorizar el componente de paginación para que estableciera los valores obtenidos de la URL.
 
-## Build
+Casi olvido el único stop que tuve durante horas: deployar automáticamente en GitHub pages. Sinceramente me tomó mucho más tiempo del esperado, a priori pensé sería una experiencia similar a Netlify, pero ni al caso, y decidí seguir intentándolo, porque quería dejarlo todo integrado en esta plataforma, además, tocó desempolvar esos conocimientos en infra, fue genial cuando por fin pude ver esta app arriba y que los cambios se aplicaran solo haciendo push. Pero la dicha demoró muy poco, al final me entero que GP no funciona bien con aplicaciones SPA, no se pueden establecer las rutas directamente desde la URL. 💀 A la final casi me rindo hasta que vi que había una manera customizando el index.html y el 404.html, se logró, aunque costando SEO, cosa que no era necesaria acá.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+La estructura de carpetas luce así:
 
-## Running unit tests
+![alt text](image.png)
+- .github: configuración de GitHub actions para realizar un build automático y deployar en GitHub pages.
+- src/core: acá dejo todo aquello que será usable por toda la aplicación: componentes (que no representan una vista de la app), pipes, servicios y archivos de tipado.
+- src/views: aquí incluyo aquellos componentes que renderizan una vista en la app: home (vista principal), movie (el detalle de una película) y el infaltable not found.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Este proyecto fue generado con  [Angular CLI](https://github.com/angular/angular-cli) versión 17.3.5.
