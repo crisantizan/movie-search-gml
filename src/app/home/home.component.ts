@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Movie, TMDBApiResponse } from '../core/types/tmdb-api.type';
+import { Movie } from '../core/types/tmdb-api.type';
 import {
   debounceTime,
   fromEvent,
@@ -18,12 +18,12 @@ import {
 import { MoviesService } from '../core/services/movies.service';
 import { CardMovieComponent } from '../card-movie/card-movie.component';
 import { Pagination } from '../core/types/home-component.type';
-import { JsonPipe } from '@angular/common';
+import { PaginationComponent } from '../pagination/pagination.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CardMovieComponent, JsonPipe],
+  imports: [CardMovieComponent, PaginationComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
