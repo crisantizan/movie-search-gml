@@ -1,5 +1,9 @@
 export type Pagination = {
   currentPage: number;
   totalPages: number;
-  totalResults: number;
+};
+
+export type RouteQueryParams = {
+  page: number;
+  title: string | null;
 };

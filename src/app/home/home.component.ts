@@ -1,15 +1,9 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Movie } from '../core/types/tmdb-api.type';
 import {
+  BehaviorSubject,
   debounceTime,
-  fromEvent,
-  map,
+  distinctUntilChanged,
   of,
   Subject,
   switchMap,
@@ -17,40 +11,52 @@ import {
 } from 'rxjs';
 import { MoviesService } from '../core/services/movies.service';
 import { CardMovieComponent } from '../card-movie/card-movie.component';
-import { Pagination } from '../core/types/home-component.type';
+import {
+  Pagination,
+  RouteQueryParams,
+} from '../core/types/home-component.type';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { GenericObject } from '../core/types/global.type';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CardMovieComponent, PaginationComponent],
+  imports: [FormsModule, CardMovieComponent, PaginationComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  @ViewChild('movieSearchInput', { static: true })
-  private movieSearchInput!: ElementRef;
+  public searchTitle: string = '';
+  public searchTitleChange$ = new Subject<string>();
 
   public movies: Movie[] = [];
-  public pagination: Pagination = {
-    currentPage: 1,
-    totalPages: 0,
-    totalResults: 0,
-  };
+
+  public currentPage$ = new BehaviorSubject<number>(1);
+  public totalPages$ = new BehaviorSubject<number>(0);
 
   private defaultMovies: Movie[] = [];
   private defaultPagination: Pagination = {
     currentPage: 1,
     totalPages: 0,
-    totalResults: 0,
+    // totalResults: 0,
   };
+
+  // La API solo permite un máximo de 500 páginas
+  private readonly MAX_PAGES = 500;
 
   private destroy$ = new Subject<void>();
 
-  constructor(private movieService: MoviesService) {}
+  constructor(
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly movieService: MoviesService
+  ) {}
 
   ngOnInit(): void {
     this.getDefaultMovies();
+    this.manageInitialQueryParams();
 
     this.onSearchMovie();
   }
@@ -60,55 +66,89 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  private manageInitialQueryParams() {
+    let { page, title } = this.route.snapshot.queryParams;
+
+    if (isNaN(page)) {
+      page = 1;
+    }
+
+    if (page > this.MAX_PAGES) {
+      page = this.MAX_PAGES;
+    }
+
+    if (page < 1) {
+      page = 1;
+    }
+
+    if (title) {
+      this.searchTitle = title;
+    }
+
+    this.updatePageQueryParams({ title });
+    this.onPageChange(page);
+  }
+
+  private updatePageQueryParams(params: Partial<RouteQueryParams>) {
+    const queryParams: GenericObject = {};
+
+    if (typeof params.page !== 'undefined') {
+      queryParams['page'] = params.page || null;
+    }
+
+    if (typeof params.title !== 'undefined') {
+      queryParams['title'] = params.title || null;
+    }
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge',
+    });
+  }
+
   private getDefaultMovies() {
     if (!!this.defaultMovies.length) {
-      this.movies = [...this.defaultMovies];
-      this.pagination = { ...this.defaultPagination };
-
       return;
     }
 
     this.movieService.getMovies({ trending: true }).subscribe((res) => {
       this.defaultMovies = res.results || [];
-      this.movies = [...this.defaultMovies];
 
       this.defaultPagination = {
         currentPage: res.page,
         totalPages: this.getTotalPages(res.total_pages),
-        totalResults: res.total_results,
       };
-
-      this.pagination = { ...this.defaultPagination };
     });
   }
 
   private onSearchMovie() {
-    fromEvent<Event>(this.movieSearchInput.nativeElement, 'keyup')
+    this.searchTitleChange$
       .pipe(
         takeUntil(this.destroy$),
-        map((event: Event) => (event.target as HTMLInputElement).value),
         debounceTime(500),
-        switchMap((searchTerm: string) => {
-          // Return default movies if search term is empty
-          if (searchTerm.length === 0) {
+        distinctUntilChanged(),
+        switchMap((searchTitle) => {
+          this.updatePageQueryParams({
+            title: searchTitle,
+          });
+
+          if (!searchTitle) {
             return of({
               results: this.defaultMovies,
               page: this.defaultPagination.currentPage,
               total_pages: this.defaultPagination.totalPages,
-              total_results: this.defaultPagination.totalResults,
             });
           }
 
-          return this.movieService.getMovies({ title: searchTerm });
+          return this.movieService.getMovies({ title: searchTitle });
         })
       )
       .subscribe((response) => {
         this.movies = response?.results || [];
-        this.pagination = {
-          currentPage: response.page,
-          totalPages: this.getTotalPages(response.total_pages),
-          totalResults: response.total_results,
-        };
+
+        this.currentPage$.next(response.page);
+        this.totalPages$.next(this.getTotalPages(response.total_pages));
       });
   }
 
@@ -119,9 +159,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     return Math.min(apiTotalPages, 500);
   }
 
+  public onChangeSearchInput(event: Event) {
+    const searchText = (event.target as HTMLInputElement).value;
+    this.searchTitleChange$.next(searchText);
+  }
+
   public onPageChange(page: number) {
-    const title = (this.movieSearchInput.nativeElement as HTMLInputElement)
-      .value;
+    const title = this.searchTitle;
 
     const filter = {
       page,
@@ -132,11 +176,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.movieService.getMovies(filter).subscribe((response) => {
       this.movies = response.results || [];
 
-      this.pagination = {
-        currentPage: response.page,
-        totalPages: this.getTotalPages(response.total_pages),
-        totalResults: response.total_results,
-      };
+      const totalPages = this.getTotalPages(response.total_pages);
+      const page = response.page > totalPages ? totalPages : response.page;
+
+      this.currentPage$.next(page);
+      this.totalPages$.next(this.getTotalPages(response.total_pages));
+
+      this.updatePageQueryParams({ page });
     });
   }
 }

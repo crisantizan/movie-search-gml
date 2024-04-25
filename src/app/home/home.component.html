@@ -1,7 +1,11 @@
 <main class="app">
   <h1>Películas</h1>
   <section class="search">
-      <input type="text" #movieSearchInput placeholder="Buscar película">
+      <input
+        [(ngModel)]="searchTitle"
+        (input)="onChangeSearchInput($event)"
+        type="text" placeholder="Buscar película"
+      />
   </section>
 
   <section class="container">
@@ -15,8 +19,8 @@
   </section>
 
   <pagination
-    [currentPage]="pagination.currentPage"
-    [totalPages]="pagination.totalPages"
+    [currentPage]="currentPage$"
+    [totalPages]="totalPages$"
     [pageRange]="1"
     (pageChange)="onPageChange($event)"
   ></pagination>
