@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Movie } from '../core/types/tmdb-api.type';
-import { MoviesService } from '../core/services/movies.service';
+import { Movie } from '../../types/tmdb-api.type';
+import { MoviesService } from '../../services/movies.service';
 import { Router } from '@angular/router';
 
 const MAX_LENGTH = 40;
@@ -9,9 +9,8 @@ const MAX_LENGTH = 40;
   selector: 'app-card-movie',
   standalone: true,
   templateUrl: './card-movie.component.html',
-  styleUrls: ['./card-movie.component.css']
+  styleUrls: ['./card-movie.component.css'],
 })
-
 export class CardMovieComponent {
   @Input('movie') movie!: Movie;
 

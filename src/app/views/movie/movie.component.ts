@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { MoviesService } from '../core/services/movies.service';
-import { MovieDetails } from '../core/types/tmdb-api.type';
+import { MoviesService } from '../../core/services/movies.service';
+import { MovieDetails } from '../../core/types/tmdb-api.type';
 import { Location } from '@angular/common';
-import { FormatDatePipe } from '../core/pipes/format-date.pipe';
+import { FormatDatePipe } from '../../core/pipes/format-date.pipe';
 
 @Component({
   selector: 'app-movie',

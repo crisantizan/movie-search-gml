@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Movie } from '../core/types/tmdb-api.type';
+import { Movie } from '../../core/types/tmdb-api.type';
 import {
   BehaviorSubject,
   debounceTime,
@@ -9,16 +9,16 @@ import {
   switchMap,
   takeUntil,
 } from 'rxjs';
-import { MoviesService } from '../core/services/movies.service';
-import { CardMovieComponent } from '../card-movie/card-movie.component';
+import { MoviesService } from '../../core/services/movies.service';
+import { CardMovieComponent } from '../../core/components/card-movie/card-movie.component';
 import {
   Pagination,
   RouteQueryParams,
-} from '../core/types/home-component.type';
-import { PaginationComponent } from '../pagination/pagination.component';
+} from '../../core/types/home-component.type';
+import { PaginationComponent } from '../../core/components/pagination/pagination.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { GenericObject } from '../core/types/global.type';
+import { GenericObject } from '../../core/types/global.type';
 
 @Component({
   selector: 'app-home',
