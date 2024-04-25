@@ -111,4 +111,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         };
       });
   }
+
+  public formatQuantityResults(): string {
+    return new Intl.NumberFormat().format(this.pagination.totalResults);
+  }
 }
