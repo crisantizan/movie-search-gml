@@ -34,4 +34,8 @@ export class MoviesService {
       headers: this.getHeaders(),
     });
   }
+
+  public getImageUrl(path: string) {
+    return `https://image.tmdb.org/t/p/w400${path}`;
+  }
 }

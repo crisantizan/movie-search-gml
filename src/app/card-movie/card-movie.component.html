@@ -1,0 +1,12 @@
+<div class="movie">
+    <div>
+        <p>{{ movie.release_date }}</p>
+    </div>
+    <div>
+        <img src="{{ getImage() }}" [alt]="movie.title" [title]="movie.title">
+    </div>
+    <div>
+      <h3>{{ movie.title }}</h3>
+      <span>{{ truncateOverview }}</span>
+    </div>
+</div>

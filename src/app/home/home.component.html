@@ -1,1 +1,28 @@
-<h2>Hello World!</h2>
+<main class="app">
+  <h1>Listado de Películas</h1>
+  <section class="search">
+      <input type="text" #movieSearchInput placeholder="Buscar película">
+  </section>
+
+  <section class="container">
+    @for (movie of movies; track movie.id) {
+      <app-card-movie [movie]="movie"></app-card-movie>
+    } @empty {
+      <div class="empty">
+        <h3>No se encontraron películas</h3>
+      </div>}
+  </section>
+
+  <!-- @if (true) {
+    <div class="container">
+      @for (movie of movies; track movie.id) {
+        <app-card-movie [movie]="movie"></app-card-movie>
+      }
+    </div>
+  }
+  @else {
+    <div class="empty">
+      <h3>No se encontraron películas</h3>
+    </div>
+  } -->
+</main>
