@@ -8,33 +8,36 @@
 button {
   padding: 8px 12px;
   margin: 0 4px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  color: #333;
+  border: 1px solid #616364;
+  background-color: #616364;
+  color: var(--input-color);
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.3s ease, color 0.3s ease;
+  font-weight: bold;
+  font-size: 1.2rem;
+  min-width: 50px;
 }
 
 button:hover {
-  background-color: #f0f0f0;
+  background-color: #868788;
 }
 
 button[disabled] {
-  background-color: #f0f0f0;
-  color: #aaa;
-  cursor: not-allowed;
-}
-
-.pagination-dots {
-  margin: 0 4px;
-  color: #aaa;
+  background-color: #c0c0c0;
+  color: #4a4a4a;
 }
 
 .btn-next {
   margin-left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-prev {
   margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
