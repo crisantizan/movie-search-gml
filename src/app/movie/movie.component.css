@@ -32,6 +32,7 @@
   border: none;
   box-shadow: 0px 13px 10px -7px rgba(0, 0, 0, 0.4);
   background-color: #343739;
+}
 
 .dark-button {
   background-color: #333;
@@ -51,4 +52,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.rating,
+.duration,
+.date {
+  text-align: center;
+}
+
+.rating-info {
+  display: flex;
+  align-items: center;
+}
+
+.total-score {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.votes {
+  color: white;
+  margin-left: 5px;
+}
+
+.star {
+  font-size: 24px;
+  color: gold;
+  margin-left: 5px;
+}
+
+.duration-info,
+.date-info {
+  color: white;
 }
