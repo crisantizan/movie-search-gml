@@ -2,11 +2,12 @@ import { Component, Input } from '@angular/core';
 import { MoviesService } from '../core/services/movies.service';
 import { MovieDetails } from '../core/types/tmdb-api.type';
 import { Location } from '@angular/common';
+import { FormatDatePipe } from '../core/pipes/format-date.pipe';
 
 @Component({
   selector: 'app-movie',
   standalone: true,
-  imports: [],
+  imports: [FormatDatePipe],
   templateUrl: './movie.component.html',
   styleUrl: './movie.component.css',
 })
